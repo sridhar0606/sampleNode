@@ -31,12 +31,43 @@ app.use(enableCORS);
 //mongoose.connect(dbconnect);
 app.get("/test",function(req,res){
 
-	res.json({title:"welcome"});
+    res.json({title:"welcome"});
 })
 
-app.post("/login",function(req,res){
+app.post("/login",function(req,res) {
 
-	res.json(req.body);
+     let query = { 'email': request.body.email, 'password':request.body.password };
+
+    db.findOne(query).exec(function (errors, data) {
+
+        if(data) {
+
+            response.json({status:'success',data:data,message:'Login successfully!'})
+
+        } else {
+            response.json({status:'failure',message:'Invaild Credentials',data:null});
+        }
+
+    });
+    
+})
+
+app.post("/signup",function(req,res){
+
+    
+    var userDB =  new db(req.body);
+            
+            userDB.save(function (err, data) {
+
+                if(data){
+                    res.json({status:'success',data:null,message:'User signup successfully!'})
+
+                } else {
+                    res.json({status:'failure',data:null,message:'Something went wrong!'})
+                }
+
+            })
+
 })
 app.listen(8088, function () {
 
